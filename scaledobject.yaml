@@ -1,0 +1,24 @@
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: sample-eventhub
+  labels: {}
+spec:
+  scaleTargetRef:
+    name: sample-eventhub
+  pollingInterval: 10    # Optional. Default: 30 seconds
+  cooldownPeriod: 60
+  minReplicaCount: 0     # Optional. Default: 0
+  maxReplicaCount: 20 
+  triggers:
+  - type: azure-eventhub
+    metadata:
+      direction: in
+      eventHubName: testhub
+      storageConnectionFromEnv: AzureWebJobsStorage
+      cardinality: many
+      consumerGroup: testcg
+      dataType: string
+      unprocessedEventThreshold: '5'
+      connectionFromEnv: EventHub
